@@ -16,10 +16,11 @@ cfdisk $drive
 echo "Enter the linux partition: "
 read main_partition
 mkfs.ext4 $main_partition 
-read -p "Did you also created efi partition? [yn]" answer
-
+read -p "Did you want to format efi partition? [yn]" answer
+echo "Enter EFI partition: "
+read efi_partition
 if [[ $answer = y ]] ; then
-  echo "Enter EFI partition: "
+  echo "If you are sure....Enter EFI partition again: "
   read efi_partition
   mkfs.vfat -F 32 $efi_partition
 fi
@@ -57,14 +58,15 @@ mkdir /boot/efi
 mount $efi_partition /boot/efi 
 grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB
 grub-mkconfig -o /boot/grub/grub.cfg
-pacman --noconfirm -S pulseaudio pulseaudio-alsa alsa-utils xorg vulkan-intel alacritty i3gaps i3wm i3blocks i3lock i3status xorg-xinit redshift vlc  firefox-developer-edition vim vim-plugins vi nano wget dhcpcd xdg-user-dirs zsh networkmanager lightdm lightdm-gtk-greeter lightdm-webkit-theme-litarvan
+pacman --noconfirm -S pulseaudio pulseaudio-alsa alsa-utils xorg vulkan-intel alacritty i3gaps i3wm i3blocks i3lock i3status xorg-xinit redshift vlc firefox-developer-edition vim vim-plugins vi nano wget dhcpcd xdg-user-dirs zsh networkmanager lightdm lightdm-gtk-greeter lightdm-webkit-theme-litarvan
 systemctl enable NetworkManager.service 
 systemctl enable lightdm.service
 visudo
 echo "Enter Username: "
 read username
-useradd -m -G wheel -s /bin/bash $username
+useradd -m -G wheel,sudo,storage,video,optical -s /bin/bash $username
+echo "Akhri kaam bhai password dede"
 passwd $username
-echo "Reboot now and set the "rest" on reboot...where rest is a DE"
+echo "Reboot now and set the rest on reboot...rest if it powers on(Pun not intended ;) "
 
 
